@@ -2,7 +2,7 @@
 
 ## What This Workspace Is For
 
-`client-request.yml` is called by a five-line stub in each client repo (`uses: JMLR-Software/.github/.github/workflows/client-request.yml@main`, `secrets: inherit`) when an issue is labelled `request`. It checks out the client repo and this repo, installs pnpm and Node, and runs `anthropics/claude-code-action@v1` with a fixed prompt.
+`client-request.yml` is called by a five-line stub in each client repo (`uses: JMLR-Software/.github/.github/workflows/client-request.yml@main`) when an issue is labelled `request`. It checks out the client repo and this repo, installs pnpm and Node, and runs `anthropics/claude-code-action@v1` with a fixed prompt.
 
 ## Layout
 
@@ -16,5 +16,5 @@
 
 ## Rules
 
-- Keep `permissions` to `contents`, `pull-requests`, `issues`, and `id-token` write. Never add `secrets` beyond `ANTHROPIC_API_KEY` from `secrets.inherit`.
+- Keep `permissions` to `contents`, `pull-requests`, `issues`, and `id-token` write. `id-token` is what authenticates to Anthropic: the run's GitHub OIDC token is exchanged under federation rule `fdrl_014v5bEpUWcETCXBktvopiXd` (subject `repo:JMLR-Software/*`, service account `github-actions`). There is no API key and no secret; do not add one.
 - Never widen `--allowedTools` to unrestricted `Bash`.

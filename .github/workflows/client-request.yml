@@ -2,9 +2,6 @@ name: Client request
 
 on:
   workflow_call:
-    secrets:
-      ANTHROPIC_API_KEY:
-        required: true
 
 jobs:
   handle:
@@ -52,7 +49,12 @@ jobs:
       - name: Run Claude Code on the request
         uses: anthropics/claude-code-action@v1
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Workload identity federation: the job's GitHub OIDC token (id-token: write) is exchanged
+          # for a short-lived Anthropic token. No API key anywhere. The rule only accepts
+          # subjects matching repo:JMLR-Software/*. These are identifiers, not secrets.
+          anthropic_federation_rule_id: fdrl_014v5bEpUWcETCXBktvopiXd
+          anthropic_organization_id: 495fbad8-8207-4aa9-8fc8-7a265f28888a
+          anthropic_service_account_id: svac_0142jLxz3RmsxqMHFqMykxbA
           prompt: |
             You are handling client request issue #${{ github.event.issue.number }} in ${{ github.repository }}.
 
