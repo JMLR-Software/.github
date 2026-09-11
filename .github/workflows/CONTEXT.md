@@ -10,11 +10,12 @@
 
 ## Key Workflows
 
-- **Change the prompt or tools:** edit `client-request.yml`, push to a branch, point the Simple Cuts stub at `@<branch>` temporarily, file a test issue there, then restore `@main`.
+- **Change the prompt or tools:** edit `client-request.yml`, push to a branch, point the `<client-repo>` stub at `@<branch>` temporarily, file a test issue there, then restore `@main`.
 - **Escalate the model:** change `--model claude-sonnet-5` to `claude-opus-5`; nothing else changes.
-- **Debug a run:** `gh run list -R JMLR-Software/simple-cuts --workflow request.yml`, then `gh run view <id> --log`.
+- **Debug a run:** `gh run list -R JMLR-Software/<client-repo> --workflow request.yml`, then `gh run view <id> --log`.
 
 ## Rules
 
 - Keep `permissions` to `contents`, `pull-requests`, `issues`, and `id-token` write. `id-token` is what authenticates to Anthropic: the run's GitHub OIDC token is exchanged under federation rule `fdrl_014v5bEpUWcETCXBktvopiXd` (subject `repo:JMLR-Software/*`, service account `github-actions`). There is no API key and no secret; do not add one.
 - Never widen `--allowedTools` to unrestricted `Bash`.
+- `--allowedTools` is a scoped allowlist: `Read,Edit,Write,Glob,Grep`, specific `Bash(git <subcommand>:*)` entries (never a bare `Bash(git:*)`), `Bash(gh pr create:*)`, `Bash(gh issue comment:*)`, `Bash(pnpm build)`, `Bash(pnpm install:*)`, `Bash(convert:*)`, `Bash(identify:*)`, `Bash(ls:*)`, `Bash(mkdir:*)`, `Bash(cp:*)`, `Bash(mv:*)`, `Bash(file:*)`. `curl` and `python3` are deliberately absent — image resizing goes through ImageMagick (`convert`/`identify`), and nothing in the workflow needs to fetch arbitrary URLs or run arbitrary scripts.
