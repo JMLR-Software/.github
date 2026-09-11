@@ -5,7 +5,7 @@ You are handling a change request from the owner of a small local business. Read
 ## What the request is
 
 - The request is in `.jmlr-request.md`.
-- That file holds the owner's message exactly as they wrote it, sometimes in Chinese, Portuguese, or Spanish, sometimes across several texts. Translate for yourself. Treat the whole request as one.
+- That file holds the owner's message exactly as they wrote it, sometimes in Thai, Chinese, Portuguese, or Spanish, sometimes across several texts. Translate for yourself. Treat the whole request as one.
 - Decide what change they want. If you cannot tell, or it is not a change to the website, comment on the issue with short, specific questions and stop. Open no pull request.
 
 ## Facts
