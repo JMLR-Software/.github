@@ -22,7 +22,8 @@ You are handling a change request from the owner of a small local business. Read
 ## Photos
 
 - A photo the owner sent is in the issue as a link into `photos-inbox/<date>/` in this repo, or attached to the issue. A site-ready photo goes in `public/photos/` under a descriptive kebab-case name, JPEG, landscape or portrait as it is, resized so the file is under 400 KB (`convert in.jpg -resize '1600x1600>' -strip -quality 85 public/photos/<name>.jpg`; ImageMagick is on the runner). Add it to the content files with alt text in both languages that says what the photo shows and names the business.
-- A photo that is a collage, a product shot, a screenshot, or under 600 px on its long side is not site-ready. Leave it in `photos-inbox/<date>/` and mention it under "Unknowns" with what to ask the owner for.
+- A small photo is still used. Anything at least 300 px on its long side that clearly shows the subject goes on the site at its native size (never upscale; skip the resize when the source is already under 1600 px). Say under "Unknowns" that it is small, and add one line to the draft reply asking for a larger one by email so it looks sharper. Texted photos are carrier-compressed, so small is the normal case, not a reason to hold the change.
+- Only these stay in `photos-inbox/<date>/` with a note under "Unknowns": a collage, a screenshot, a photo that does not show what the message says it shows, anything under 300 px on its long side, or a retail product shot on a site that has no products section.
 
 ## Build and delivery
 
