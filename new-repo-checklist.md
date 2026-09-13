@@ -32,10 +32,22 @@ Secret scanning and push protection are on for every existing repo, and the org 
 
 All of this was set on 2026-09-13. Before that, the PR rule existed only on `jmlr-dev` and only as text in each repo's `CLAUDE.md`, so the three client storefronts — where a bad push reaches a real business — were the unprotected ones.
 
-**What still needs a human:**
+### Which repos the pull-request rule applies to
 
-- **Exempting a repo** (a scratch repo where the PR rule is friction): add it to the org ruleset's `repository_name.exclude`, rather than deleting the rule.
-- **A required status check** is per-repo and is *not* set by default, deliberately. Add one only once the repo's deploy check reports under a stable name, and **name the check the repo actually produces.** A required check that never reports makes every PR permanently unmergeable — `jmlr-dev` requires `Cloudflare Pages` and will lock itself out the moment it moves to Workers.
+Josh's line, 2026-09-13: **enforce it wherever a bad push reaches someone other than Josh.** Anything public or client-facing is in; a personal working repo is out.
+
+| Repo | In or out | Why |
+|---|---|---|
+| `simple-cuts`, `sam-ko-noodle`, `deborah-burke-henderson` | in | live client storefronts |
+| `jmlr-dev` | in | public, and it is the business's own site |
+| `.github` | in | public, and its workflow runs on every client repo |
+| `local-sites` | **out** | Josh's planning and docs repo: no deploy, no public surface, and a PR per doc edit is friction with nothing on the other side of it |
+
+`local-sites` is in the org ruleset's `repository_name.exclude`. It keeps `default-branch-basics`, so the branch still cannot be deleted or force-pushed — the exemption is from the review step, not from the safety rails.
+
+A new repo defaults to **in**, because `~ALL` is the include list. Exempt one only by adding it to `exclude`, never by weakening or deleting the rule.
+
+**The one thing still per-repo:** a **required status check** is deliberately not defaulted. Add one only once the repo's deploy check reports under a stable name, and **name the check the repo actually produces.** A required check that never reports makes every PR permanently unmergeable — `jmlr-dev` requires `Cloudflare Pages` and will lock itself out the moment it moves to Workers.
 
 ## 4. Hosting is Workers, never Pages (required, every site repo)
 
