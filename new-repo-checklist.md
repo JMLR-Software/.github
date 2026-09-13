@@ -19,21 +19,23 @@ An existing repo that lacks the scaffold gets it the first time real work happen
 
 Update `CLAUDE.md` and the affected `CONTEXT.md` in the same commit as the change that made them stale. A change is not done until its context files are.
 
-## 3. Protect `main` (required, every repo)
+## 3. Protection is enforced at the org level, not by this checklist (nothing to do)
 
-The default branch is changed by pull request only. Every repo's `CLAUDE.md` says so, but saying it is not enforcing it: on 2026-09-13 only `jmlr-dev` actually had the rule, and the three client sites — the ones where a bad push reaches a real business's storefront — did not.
+A new repo is already covered the moment it is created. Two **organisation** rulesets target `~ALL` repositories on `~DEFAULT_BRANCH`:
 
-Two rulesets, both on the default branch:
+| Ruleset | Enforces |
+|---|---|
+| `default-branch-basics` | no branch deletion, no force-push |
+| `main-via-pr` | changes to the default branch go through a pull request (`required_approving_review_count: 0`, so a solo operator merges his own) |
 
-- **`default-branch-basics`** is an org-level ruleset and applies to new repos automatically. It blocks deletion and force-pushes. Nothing to do.
-- **`main-via-pr`** is per-repo and must be created: a `pull_request` rule with `required_approving_review_count: 0`, so a solo operator can merge his own PR but nothing lands on `main` without one. Copy it from any existing repo:
+Secret scanning and push protection are on for every existing repo, and the org defaults `secret_scanning_enabled_for_new_repositories` and `secret_scanning_push_protection_enabled_for_new_repositories` are both true, so a new repo inherits them. Push protection blocks a commit containing a recognised credential at push time — this is what makes "no secrets in any repo" a rule rather than a wish.
 
-  ```sh
-  gh api repos/JMLR-Software/<existing>/rulesets --jq '.[]|select(.name=="main-via-pr")' > /tmp/rs.json
-  gh api -X POST repos/JMLR-Software/<new>/rulesets --input /tmp/rs.json
-  ```
+All of this was set on 2026-09-13. Before that, the PR rule existed only on `jmlr-dev` and only as text in each repo's `CLAUDE.md`, so the three client storefronts — where a bad push reaches a real business — were the unprotected ones.
 
-Add a required status check only once the repo's deploy check reports under a stable name, and **name the check the repo actually produces.** A required check that never reports makes every PR permanently unmergeable — `jmlr-dev` required `Cloudflare Pages` and would have locked itself out the moment it moved to Workers.
+**What still needs a human:**
+
+- **Exempting a repo** (a scratch repo where the PR rule is friction): add it to the org ruleset's `repository_name.exclude`, rather than deleting the rule.
+- **A required status check** is per-repo and is *not* set by default, deliberately. Add one only once the repo's deploy check reports under a stable name, and **name the check the repo actually produces.** A required check that never reports makes every PR permanently unmergeable — `jmlr-dev` requires `Cloudflare Pages` and will lock itself out the moment it moves to Workers.
 
 ## 4. Hosting is Workers, never Pages (required, every site repo)
 
