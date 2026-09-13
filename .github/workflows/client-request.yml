@@ -54,6 +54,7 @@ jobs:
           echo ".jmlr-request.md" >> .git/info/exclude
 
       - name: Run Claude Code on the request
+        id: claude
         uses: anthropics/claude-code-action@v1
         with:
           # Workload identity federation: the job's GitHub OIDC token (id-token: write) is exchanged
@@ -74,6 +75,21 @@ jobs:
 
             Then handle the request exactly as the rules say. The branch name is request/issue-${{ github.event.issue.number }}. The pull request body must start with "Closes #${{ github.event.issue.number }}".
           claude_args: '--model claude-sonnet-5 --max-turns 60 --allowedTools "Read,Edit,Write,Glob,Grep,Bash(git status:*),Bash(git diff:*),Bash(git log:*),Bash(git checkout:*),Bash(git add:*),Bash(git commit:*),Bash(git push:*),Bash(gh pr create:*),Bash(gh issue comment:*),Bash(pnpm build),Bash(pnpm install:*),Bash(convert:*),Bash(identify:*),Bash(ls:*),Bash(mkdir:*),Bash(cp:*),Bash(mv:*),Bash(file:*)"'
+
+      - name: Save the run transcript
+        # The job log only prints the totals (cost, num_turns, permission_denials_count).
+        # Which tools were denied, and the token breakdown behind the cost, are only in
+        # this file, and it dies with the runner. Kept so the allowlist and the guides
+        # get tuned against evidence. Uploaded on failure too, which is when it matters
+        # most. It holds the owner's own words and the site content, so: private client
+        # repos only, and a short retention.
+        if: always() && steps.claude.outputs.execution_file != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: claude-run-${{ github.event.issue.number }}-${{ github.run_id }}
+          path: ${{ steps.claude.outputs.execution_file }}
+          retention-days: 14
+          if-no-files-found: warn
 
       - name: Note the failure on the issue
         if: failure()
