@@ -9,11 +9,11 @@ Every repo in JMLR-Software, client site or not, starts with these steps. They a
 In Claude Code, from the new repo's root, run `/scaffold-workspaces` before the first feature commit. It produces:
 
 - `CLAUDE.md` at the root: what the project is, the stack, a workspaces tree, a routing table (task, workspace, start-with file, what to skip), naming conventions, and project-wide rules. Short enough to read in one screen.
-- `CONTEXT.md` in every workspace: what it is for, layout, key workflows, skills, rules, what to avoid.
+- `CLAUDE.md` in every workspace: what it is for, layout, key workflows, skills, rules, what to avoid.
 
 If the repo already has an instruction file (for example the `AGENTS.md` that Next.js writes), keep `@AGENTS.md` as the first line of `CLAUDE.md`.
 
-An existing repo that lacks the scaffold gets it the first time real work happens there. When a directory grows its own workflows or more than a handful of files, give it a `CONTEXT.md` and a routing-table row. When a `CONTEXT.md` passes about 150 lines, split the workspace.
+An existing repo that lacks the scaffold gets it the first time real work happens there. When a directory grows its own workflows or more than a handful of files, give it a `CLAUDE.md` and a routing-table row. When a `CLAUDE.md` passes about 150 lines, split the workspace.
 
 ## 2. Add a root `NOTES.md`
 
@@ -26,7 +26,7 @@ which means its outstanding work is invisible too. See `~/Coding/hq/README.md`.
 
 ## 3. Keep it current
 
-Update `CLAUDE.md` and the affected `CONTEXT.md` in the same commit as the change that made them stale. A change is not done until its context files are.
+Update the root `CLAUDE.md` and the affected workspace `CLAUDE.md` in the same commit as the change that made them stale. A change is not done until its context files are.
 
 ## 4. Protection is enforced at the org level, not by this checklist (nothing to do)
 
